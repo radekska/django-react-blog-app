@@ -1,0 +1,23 @@
+services:
+  blog-service-api:
+    build:
+      context: django-backend/
+    environment:
+      - DEBUG=False
+    networks:
+      - frontend-network
+    ports:
+      - 8000:8000
+    volumes:
+      - "./django-backend/:/django-backend"
+
+  blog-service-api-consumer:
+    build:
+      context: react-frontend/blogapi
+    ports:
+      - 3000:3000
+    networks:
+      - frontend-network
+
+networks:
+  frontend-network:
