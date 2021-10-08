@@ -5,5 +5,6 @@ from blog.models import Post
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
-        exclude = ("slug",)
+        fields = ('id', 'category', 'title', 'slug', 'author',
+                  'excerpt', 'content', 'status')
         read_only_fields = ("published", "status")
