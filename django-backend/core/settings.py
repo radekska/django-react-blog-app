@@ -142,7 +142,7 @@ REST_FRAMEWORK = {
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "http://blog-service-api-consumer:3000"
+    "http://react-frontend-service:3000"
 ]
 
 AUTH_USER_MODEL = "users.NewUser"
