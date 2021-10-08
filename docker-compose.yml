@@ -2,6 +2,7 @@ services:
   blog-service-api:
     build:
       context: django-backend/
+      dockerfile: Dockerfile
     environment:
       - DEBUG=False
     networks:
@@ -14,6 +15,7 @@ services:
   blog-service-api-consumer:
     build:
       context: react-frontend/blogapi
+      dockerfile: Dockerfile
     ports:
       - 3000:3000
     networks:
