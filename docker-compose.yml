@@ -1,8 +1,9 @@
 services:
-  blog-service-api:
+  django-backend-service:
     build:
       context: django-backend/
       dockerfile: Dockerfile
+    container_name: django-backend-service
     environment:
       - DEBUG=False
     networks:
@@ -12,10 +13,11 @@ services:
     volumes:
       - "./django-backend/:/django-backend"
 
-  blog-service-api-consumer:
+  react-fontend-service:
     build:
       context: react-frontend/blogapi
       dockerfile: Dockerfile
+    container_name: react-fontend-service
     ports:
       - 3000:3000
     networks:
