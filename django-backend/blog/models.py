@@ -30,7 +30,7 @@ class Post(models.Model):
     title = models.CharField(max_length=200)
     excerpt = models.TextField(null=True)
     content = models.TextField()
-    slug = models.SlugField(max_length=200, unique_for_date="published")
+    slug = models.SlugField(max_length=200, unique_for_date="published", blank=False, default=None)
     published = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(NewUser, on_delete=models.CASCADE, related_name="blog_posts")
     status = models.CharField(max_length=10, choices=status_options, default="published")
