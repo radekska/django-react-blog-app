@@ -11,6 +11,8 @@ COPY package-lock.json ./
 
 RUN npm install && npm install react-router-dom \
     && npm install @material-ui/core \
+    && npm i --save material-ui-search-bar \
+    && npm install @material-ui/icons \
     && npm install axios
 
 COPY . ./
