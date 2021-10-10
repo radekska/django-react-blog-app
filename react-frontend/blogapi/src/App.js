@@ -12,7 +12,7 @@ function App() {
 	});
 
 	useEffect(() => {
-		axiosInstance.get().then((res) => {
+		axiosInstance.get("/posts/").then((res) => {
 			const allPosts = res.data;
 			setAppState({ loading: false, posts: allPosts });
 			console.log(res.data);
