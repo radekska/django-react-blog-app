@@ -1,14 +1,11 @@
 from typing import Any
 
 from blog.models import Post
-from django.contrib.auth.models import AnonymousUser
 from django.db.models import QuerySet
-from rest_framework import generics, status, viewsets
+from rest_framework import filters, generics, viewsets
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
+from rest_framework.permissions import BasePermission, IsAdminUser, IsAuthenticated, SAFE_METHODS
 from rest_framework.request import Request
-from rest_framework.response import Response
-from rest_framework import filters
 
 from .serializers import PostSerializer
 
@@ -19,20 +16,16 @@ class PostUserWritePermission(BasePermission):
     def has_object_permission(self, request: Request, view, obj) -> bool:
         if request.method in SAFE_METHODS:
             return True
-
         return request.user == obj.author
 
 
-class PostView(viewsets.ModelViewSet):
-    permission_classes = [PostUserWritePermission, IsAuthenticated]
+class PostViewSet(viewsets.ModelViewSet):
+    permission_classes = (PostUserWritePermission, IsAuthenticated)
     serializer_class = PostSerializer
 
     def get_queryset(self) -> QuerySet:
-        return Post.post_objects.all()
-
-    # def get_queryset(self) -> QuerySet:
-    #     user = self.request.user
-    #     return Post.objects.filter(author=user)
+        user = self.request.user
+        return Post.objects.filter(author=user)
 
     def get_object(self, **kwargs: Any) -> Post:
         item = self.kwargs.get("pk")
@@ -43,44 +36,16 @@ class PostView(viewsets.ModelViewSet):
         return get_object_or_404(Post, id=item)
 
 
+class AdminPostViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsAdminUser,)
+    serializer_class = PostSerializer
+
+    def get_queryset(self) -> QuerySet:
+        return Post.objects.all()
+
+
 class PostListDetailFilter(generics.ListAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ("^slug", "^title")
-
-# ViewSet implementation for PostView #
-# The base ViewSet class does not provide any actions by default.
-# class PostView(viewsets.ViewSet):
-#     permission_classes = [IsAuthenticated]
-#
-#     @property
-#     def queryset(self) -> QuerySet:
-#         return Post.post_objects.all()
-#
-#     def list(self, request: Request) -> Response:
-#         serializer = PostSerializer(self.queryset, many=True)
-#         return Response(serializer.data)
-#
-#     def retrieve(self, request: Request, pk: int = None) -> Response:
-#         post = get_object_or_404(self.queryset, pk=pk)
-#         serializer = PostSerializer(post)
-#         return Response(serializer.data)
-#
-#     @staticmethod
-#     def create(request: Request):
-#         serializer = PostSerializer(data=request.data)
-#         if serializer.is_valid():
-#             post = Post.objects.create(**serializer.validated_data)
-#             post.save()
-#             return Response(status=status.HTTP_201_CREATED)
-#         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-#
-#     def update(self, request: Request, pk: int = None):
-#         pass
-#
-#     def partial_update(self, request: Request, pk: int = None):
-#         pass
-#
-#     def destroy(self, request, pk=None):
-#         pass
