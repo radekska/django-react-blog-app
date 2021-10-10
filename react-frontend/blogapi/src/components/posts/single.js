@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import axiosInstance from '../axios';
+import axiosInstance from '../../axios';
 import {useParams} from 'react-router-dom';
 //MaterialUI
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -28,6 +28,8 @@ export default function Post() {
             console.log(res.data);
         });
     }, [setData]);
+
+
 
     return (
         <Container component="main" maxWidth="md">
