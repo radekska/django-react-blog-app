@@ -1,12 +1,14 @@
 from typing import Any
 
 from blog.models import Post
+from django.contrib.auth.models import AnonymousUser
 from django.db.models import QuerySet
-from rest_framework import status, viewsets
+from rest_framework import generics, status, viewsets
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import BasePermission, IsAuthenticated, SAFE_METHODS
 from rest_framework.request import Request
 from rest_framework.response import Response
+from rest_framework import filters
 
 from .serializers import PostSerializer
 
@@ -22,20 +24,30 @@ class PostUserWritePermission(BasePermission):
 
 
 class PostView(viewsets.ModelViewSet):
-    permission_classes = [PostUserWritePermission]
+    permission_classes = [PostUserWritePermission, IsAuthenticated]
     serializer_class = PostSerializer
 
-    @property
-    def queryset(self) -> QuerySet:
+    def get_queryset(self) -> QuerySet:
         return Post.post_objects.all()
 
-    def get_object(self, queryset: QuerySet = None, **kwargs: Any) -> Post:
+    # def get_queryset(self) -> QuerySet:
+    #     user = self.request.user
+    #     return Post.objects.filter(author=user)
+
+    def get_object(self, **kwargs: Any) -> Post:
         item = self.kwargs.get("pk")
         try:
             item = int(item)
         except ValueError:
             return get_object_or_404(Post, slug=item)
         return get_object_or_404(Post, id=item)
+
+
+class PostListDetailFilter(generics.ListAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ("^slug", "^title")
 
 # ViewSet implementation for PostView #
 # The base ViewSet class does not provide any actions by default.
