@@ -1,5 +1,5 @@
 services:
-  django-backend-service:
+  django-backend:
     build:
       context: django-backend/
       dockerfile: Dockerfile
@@ -13,7 +13,7 @@ services:
     volumes:
       - "./django-backend/:/django-backend"
 
-  react-fontend-service:
+  react-fontend:
     build:
       context: react-frontend/blogapi
       dockerfile: Dockerfile
