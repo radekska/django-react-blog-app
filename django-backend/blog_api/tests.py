@@ -18,8 +18,8 @@ class TestPostDetail(APITestCase):
 class TestPostList(APITestCase):
     @classmethod
     def setUpTestData(cls):
-        cls.list_create_url = reverse("blog_api:list_create")
-        cls.detail_create_url = reverse("blog_api:detail_create", kwargs={"pk": 1})
+        cls.list_create_url = reverse("blog_api:post-list")
+        cls.detail_create_url = reverse("blog_api:post-detail", kwargs={"pk": 1})
 
     def test_posts_view(self):
         response = self.client.get(self.list_create_url, format="json")
