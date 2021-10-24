@@ -2,10 +2,12 @@ from typing import Any
 
 from blog.models import Post
 from django.db.models import QuerySet
-from rest_framework import filters, generics, viewsets
+from rest_framework import filters, generics, status, viewsets
 from rest_framework.generics import get_object_or_404
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import BasePermission, IsAdminUser, IsAuthenticated, SAFE_METHODS
 from rest_framework.request import Request
+from rest_framework.response import Response
 
 from .serializers import PostSerializer
 
@@ -36,12 +38,32 @@ class PostViewSet(viewsets.ModelViewSet):
         return get_object_or_404(Post, id=item)
 
 
+# class AdminPostUpload(APIView):
+#     permission_classes = (IsAuthenticated,)
+#
+#     def post(self, request: Request, format: None):
+#         print(request.data)
+#         serializer = PostSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class AdminPostViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminUser,)
     serializer_class = PostSerializer
+    parser_classes = (MultiPartParser, FormParser)
 
     def get_queryset(self) -> QuerySet:
         return Post.objects.all()
+
+    def create(self, request, *args, **kwargs):
+        serializer = PostSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class PostListDetailFilter(generics.ListAPIView):
