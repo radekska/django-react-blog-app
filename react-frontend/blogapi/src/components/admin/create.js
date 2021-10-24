@@ -96,7 +96,7 @@ export default function Create() {
 		formData.append('excerpt', postData.excerpt);
 		formData.append('content', postData.content);
 		formData.append('image', postimage.image[0]);
-		axiosInstance.post(`admin/create/`, formData);
+		axiosInstance.post(`admin/`, formData);
 		history.push({
 			pathname: '/admin/',
 		});
