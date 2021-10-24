@@ -1,5 +1,8 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from rest_framework.documentation import include_docs_urls
 from rest_framework.schemas import get_schema_view
 from rest_framework.documentation import include_docs_urls
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -18,3 +21,5 @@ urlpatterns = [
         description="API for the BlogAPI",
         version="1.0.0"), name='blog_api-schema')
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_URL)
