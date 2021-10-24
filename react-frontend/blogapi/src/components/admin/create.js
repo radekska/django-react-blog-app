@@ -98,7 +98,7 @@ export default function Create() {
 		formData.append('image', postimage.image[0]);
 		axiosInstance.post(`admin/`, formData);
 		history.push({
-			pathname: '/admin/',
+			pathname: '/admin-view/',
 		});
 		window.location.reload();
 	};
