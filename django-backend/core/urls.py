@@ -21,4 +21,4 @@ urlpatterns = [
         version="1.0.0"), name='blog_api-schema')
 ]
 
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_URL)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
